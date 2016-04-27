@@ -58,7 +58,12 @@ export default class SuggestService {
 
         this.racerPath = PathService.getRacerPath();
 
-        this.racerDaemon = cp.spawn(PathService.getRacerPath(), ['--interface=tab-text', 'daemon'], { stdio: 'pipe' });
+        this.racerDaemon = cp.spawn(PathService.getRacerPath(), ['--interface=tab-text', 'daemon'],
+            { stdio: 'pipe', env: {
+                    'RUST_BACKTRACE' : '1',
+                    'RUST_SRC_PATH'  : PathService.getRustLangSrcPath()
+                }
+            });
         this.racerDaemon.on('error', this.stopDaemon.bind(this));
         this.racerDaemon.on('close', this.stopDaemon.bind(this));
 
